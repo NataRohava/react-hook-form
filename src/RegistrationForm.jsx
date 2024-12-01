@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { Input, Radio, DatePicker, Button } from 'antd'
+import { Input, Radio, DatePicker, Modal, Button } from 'antd'
 
 
 const RegistrationForm = () => {
@@ -17,9 +17,27 @@ const RegistrationForm = () => {
   const password = watch('password');
   //ф-ция onSubmit выз-ся при отправке формы
   //если все поля прошли валидацию,data будет содержать все значения полей формы
-  const onSubmit = data => {
-    console.log(data)
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  //состояние для хранения данных формы
+  const [formData, setFormData] = useState(null)   
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const onSubmit = data => {   
+    console.log(data);
+    setFormData(data); // Обновляем и Сохраняем данные формы в состоянии
+    setIsModalOpen(true); // Открываем модальное окно
+    
   }
+  
+  
   return (
     //создаем компонент формы
     //в onSubmit передаем handleSubmit->обрабатывает данные формы->нет ошибок,выз-ся 
@@ -149,10 +167,16 @@ const RegistrationForm = () => {
       задаёт стиль кнопки 
       htmlType='submit' указывает, что кнопка является кнопкой отправки формы (submit)
       */}
-      <Button type='primary' htmlType='submit'>
-        Отправить
+      {/* htmlType='submit' */}
+      <Button type='primary'  htmlType='submit'>
+        Зарегистрироваться
       </Button>
+      
+      <Modal title="Успешно зарегистрировано!" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p>{JSON.stringify(formData)}</p>
+      </Modal>
     </form>
+    
   )
 }
 export default RegistrationForm
